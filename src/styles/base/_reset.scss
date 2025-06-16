@@ -1,0 +1,6 @@
+@use "../includes/variables" as *;
+
+body {
+    font-family: $primary_font;
+    color: $body_color;
+}
