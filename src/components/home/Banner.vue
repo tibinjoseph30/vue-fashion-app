@@ -13,19 +13,14 @@ const slides = [
 
 <style scoped>
 .mySwiper {
-  width: 100%;
-  height: auto;
+    width: 100%;
+    height: auto;
 }
 </style>
 
 <template>
-    <Swiper 
-        :modules="[Pagination]"
-        :slides-per-view="1" 
-        :space-between="5"
-        :pagination="{ clickable: true }"  
-        class="mySwiper"
-    >
+    <Swiper :modules="[Pagination]" :slides-per-view="1" :space-between="5" :pagination="{ clickable: true }"
+        class="mySwiper">
         <swiper-slide v-for="(slide, index) in slides" :key="index">
             <img :src="slide" class="w-full" />
         </swiper-slide>

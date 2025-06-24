@@ -1,0 +1,6 @@
+@use "../includes/variables" as *;
+
+.btn-primary {
+  background-color: $primary_color;
+  color: #fff;
+}

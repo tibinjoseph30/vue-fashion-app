@@ -5,6 +5,6 @@ import Header from './components/layout/Header.vue';
 <template>
   <Header />
   <main>
-    <RouterView />
+    <RouterView :key="$route.path" />
   </main>
 </template>
