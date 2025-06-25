@@ -1,0 +1,15 @@
+@use "../includes/variables" as *;
+
+.order-details {
+    .order-form-block {
+        width: calc(100% - 500px);
+        max-width: 100%;
+    }
+    .order-info-block {
+        position: relative;
+        width: 500px;
+        figure {
+            max-width: 80px;
+        }
+    }
+}

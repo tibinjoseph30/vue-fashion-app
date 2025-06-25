@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import OrderForm from "../components/order/OrderForm.vue";
+import OrderInfo from "../components/order/OrderInfo.vue";
 
 type Product = {
   productCode: string;
@@ -134,11 +135,13 @@ const product = allProducts.find((p) => p.productCode === newProductCode);
 <template>
   <section class="py-6">
     <div class="container">
-      <div class="grid grid-cols-3">
-        <div class="col-span-2">
+      <div class="order-details flex">
+        <div class="order-form-block">
           <OrderForm :product="product" />
         </div>
-        <div>2</div>
+        <div class="order-info-block ps-10 border-s border-gray-100">
+          <OrderInfo :product="product" />
+        </div>
       </div>
     </div>
   </section>
