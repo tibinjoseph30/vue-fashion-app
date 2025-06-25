@@ -15,7 +15,7 @@ defineProps(["product"]);
     </div>
     <div class="product-info pt-4">
       <div class="text-sm">
-        <router-link :to="`collections/${product.productCode}`">
+        <router-link :to="`/collections/${product.productCode}`">
           {{ product.productName }}
         </router-link>
       </div>

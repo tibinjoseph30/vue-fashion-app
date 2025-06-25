@@ -1,4 +1,5 @@
 @use "../includes/variables" as *;
+@use "../includes/mixins" as *;
 
 body {
   font-family: $primary_font;
@@ -7,4 +8,14 @@ body {
 
 button {
   cursor: pointer;
+}
+
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  @include respond(2xl) {
+    max-width: 1460px;
+  }
 }

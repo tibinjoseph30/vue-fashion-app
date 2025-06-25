@@ -132,7 +132,7 @@ const collectionProducts = products[collectionId] || [];
 
 <template>
   <section class="py-6">
-    <div class="container mx-auto">
+    <div class="container">
       <h2 class="text-center text-3xl font-bold uppercase mb-8">
         New Arrivals {{ collectionId }}
       </h2>

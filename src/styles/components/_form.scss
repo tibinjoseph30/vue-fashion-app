@@ -1,0 +1,13 @@
+@use "../includes/variables" as *;
+
+.form-label {
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+.form-control {
+  border: 2px solid #d5d5d5;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  border-radius: 6px;
+  min-height: 48px;
+}

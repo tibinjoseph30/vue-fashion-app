@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import ProductInfo from "../components/product/ProductInfo.vue";
-import ProductSlider from "../components/product/ProductSlider.vue";
+import OrderForm from "../components/order/OrderForm.vue";
 
 type Product = {
   productCode: string;
@@ -130,24 +129,16 @@ const products: Record<string, Product[]> = {
 
 const allProducts = [...products.men, ...products.women];
 const product = allProducts.find((p) => p.productCode === newProductCode);
-const productImagesAsArray: string[] = product?.sliderImages
-  ? Object.values(product.sliderImages)
-  : [];
 </script>
 
 <template>
   <section class="py-6">
     <div class="container">
-      <div v-if="product" class="flex product-details">
-        <div class="product-slider-block">
-          <ProductSlider :slider="productImagesAsArray" />
+      <div class="grid grid-cols-3">
+        <div class="col-span-2">
+          <OrderForm :product="product" />
         </div>
-        <div class="product-info-block">
-          <ProductInfo :product="product" />
-        </div>
-      </div>
-      <div v-else class="text-center text-red-500 text-lg py-10">
-        Product not found.
+        <div>2</div>
       </div>
     </div>
   </section>
