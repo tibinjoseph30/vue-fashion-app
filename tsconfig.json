@@ -1,7 +1,7 @@
 {
-  "types": [
-    "node"
-  ],
+  "compilerOptions": {
+    "types": ["node"]
+  },
   "files": [],
   "references": [
     {

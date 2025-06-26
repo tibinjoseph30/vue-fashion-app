@@ -1,15 +1,39 @@
 @use "../includes/variables" as *;
 
 .order-details {
-    .order-form-block {
-        width: calc(100% - 500px);
-        max-width: 100%;
+  .order-form-block {
+    width: calc(100% - 400px);
+    max-width: 100%;
+  }
+  .order-info-block {
+    width: 400px;
+    figure {
+      max-width: 60px;
     }
-    .order-info-block {
-        position: relative;
-        width: 500px;
-        figure {
-            max-width: 80px;
-        }
+    picture {
+      display: block;
+      max-width: 180px;
     }
+    .qr-code-head {
+      position: relative;
+      &::after,
+      &::before {
+        content: "";
+        height: 1px;
+        width: 35%;
+        display: inline-block;
+        background-color: #e5e5e5;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      &::after {
+        right: 0;
+      }
+      &::before {
+        left: 0;
+      }
+    }
+  }
 }
