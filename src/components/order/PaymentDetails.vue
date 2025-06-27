@@ -3,11 +3,12 @@ import { Field, Form } from "vee-validate";
 import { ref } from "vue";
 
 const props = defineProps(["data"]);
-const emit = defineEmits(["submit", "back"]);
+const emit = defineEmits(["update", "submit", "back"]);
 
 const localData = ref({ ...props.data });
 
 const handleSubmit = () => {
+  emit("update", localData.value);
   emit("submit");
 };
 </script>

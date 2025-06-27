@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { Field, Form } from "vee-validate";
-import { ref } from "vue";
+import { ErrorMessage, Field, Form, useForm } from "vee-validate";
 import Vue3Select from "vue3-select";
 import "vue3-select/dist/vue3-select.css";
+import { orderSchema } from "../../constants/orderFormValidation";
+import type { OrderSection } from "../../constants/orderFormInterface";
 
-const props = defineProps(["data"]);
-const emit = defineEmits(["update", "next"]);
+const props = defineProps<{ data: OrderSection }>();
+const emit = defineEmits<{
+  (e: "update", data: OrderSection): void;
+  (e: "next"): void;
+}>();
 
-const localData = ref({ ...props.data });
+const { handleSubmit } = useForm<OrderSection>({
+  validationSchema: orderSchema,
+  initialValues: props.data,
+});
 
-const handleNext = () => {
-  emit("update", localData.value);
+function handleNext(values: OrderSection) {
+  emit("update", values);
   emit("next");
-};
+}
 
 const productSizes = [
   { value: "S", label: "Small" },
@@ -24,26 +31,28 @@ const productSizes = [
 </script>
 
 <template>
-  <Form @submit="handleNext" class="grid gap-y-6">
+  <Form @submit="handleSubmit(handleNext)" class="grid gap-y-6">
     <div>
       <label for="productCode" class="form-label">Product Code</label>
-      <Field
-        name="productCode"
-        v-model="localData.productCode"
-        id="productCode"
-        class="form-control"
-      />
+      <Field name="productCode" id="productCode" class="form-control" />
+      <ErrorMessage name="productCode" class="text-red-500 text-sm mt-1" />
     </div>
+
     <div>
-      <label for="product_code" class="form-label">Select Size</label>
-      <Vue3Select
-        v-model="localData.productSize"
-        :options="productSizes"
-        label-by="label"
-        value-by="value"
-        class="form-control"
-      />
+      <label for="productSize" class="form-label">Select Size</label>
+      <Field name="productSize" v-slot="{ value, handleChange }">
+        <Vue3Select
+          :modelValue="value"
+          @update:modelValue="handleChange"
+          :options="productSizes"
+          label-by="label"
+          value-by="value"
+          class="form-control"
+        />
+      </Field>
+      <ErrorMessage name="productSize" class="text-red-500 text-sm mt-1" />
     </div>
+
     <div class="flex justify-end">
       <button
         type="submit"

@@ -46,8 +46,20 @@ const submitOrder = () => {
         @update="formData.order = $event"
         @next="next"
       />
-      <Step2 v-if="step === 2" @back="prev" @next="next" />
-      <Step3 v-if="step === 3" @back="prev" @submit="submitOrder" />
+      <Step2
+        v-if="step === 2"
+        :data="formData.delivery"
+        @update="formData.delivery = $event"
+        @back="prev"
+        @next="next"
+      />
+      <Step3
+        v-if="step === 3"
+        :data="formData.payment"
+        @update="formData.payment = $event"
+        @back="prev"
+        @submit="submitOrder"
+      />
     </div>
   </div>
 </template>
