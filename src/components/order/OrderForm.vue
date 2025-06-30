@@ -1,31 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Step1 from "./OrderDetails.vue";
-import Step2 from "./DeliveryDetails.vue";
-import Step3 from "./PaymentDetails.vue";
-import { defaultOrderFormData } from "../../constants/orderFormData";
-import type { OrderForm } from "../../constants/orderFormInterface";
+import { ref } from 'vue';
+import { useFormData } from '../../constants/composables/OrderFormData';
+import OrderDetails from './OrderDetails.vue';
+import DeliveryDetails from './DeliveryDetails.vue';
+import PaymentDetails from './PaymentDetails.vue';
 
-const step = ref(1);
-const totalSteps = 3;
+const { formData } = useFormData();
+const currentStep = ref(0);
 
-const formData = ref<OrderForm>({ ...defaultOrderFormData });
+const steps = [OrderDetails, DeliveryDetails, PaymentDetails];
 
-const next = () => {
-  if (step.value < totalSteps) {
-    step.value++;
-  }
+const nextStep = () => {
+  if (currentStep.value < steps.length - 1) currentStep.value++;
 };
 
-const prev = () => {
-  if (step.value > 1) {
-    step.value--;
-  }
-};
-
-const submitOrder = () => {
-  console.log("submitted order:", formData.value);
-  alert("Order submitted successfully!");
+const prevStep = () => {
+  if (currentStep.value > 0) currentStep.value--;
 };
 </script>
 
@@ -34,32 +24,11 @@ const submitOrder = () => {
     <div
       class="flex justify-between max-w-md mx-auto text-center text-gray-500"
     >
-      <div :class="step >= 1 ? 'font-bold text-black' : ''">1. Order</div>
-      <div :class="step >= 2 ? 'font-bold text-black' : ''">2. Delivery</div>
-      <div :class="step >= 3 ? 'font-bold text-black' : ''">3. Payment</div>
+      <div :class="currentStep >= 0 ? 'font-bold text-black' : ''">1. Order</div>
+      <div :class="currentStep >= 1 ? 'font-bold text-black' : ''">2. Contact</div>
+      <div :class="currentStep >= 3 ? 'font-bold text-black' : ''">3. Delivery</div>
     </div>
-
-    <div class="mt-10">
-      <Step1
-        v-if="step === 1"
-        :data="formData.order"
-        @update="formData.order = $event"
-        @next="next"
-      />
-      <Step2
-        v-if="step === 2"
-        :data="formData.delivery"
-        @update="formData.delivery = $event"
-        @back="prev"
-        @next="next"
-      />
-      <Step3
-        v-if="step === 3"
-        :data="formData.payment"
-        @update="formData.payment = $event"
-        @back="prev"
-        @submit="submitOrder"
-      />
-    </div>
+    <component :is="steps[currentStep]" @next="nextStep" @back="prevStep" :formData="formData" />
+    
   </div>
 </template>

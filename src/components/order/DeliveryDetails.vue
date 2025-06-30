@@ -1,50 +1,32 @@
-<script setup lang="ts">
-import { Field, Form } from "vee-validate";
-import { ref } from "vue";
+[⚠️ Suspicious Content] <script setup lang="ts">
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { defineProps, defineEmits } from 'vue';
+import { deliverySchema } from '../../constants/validations/OrderFormValidation';
 
-const props = defineProps(["data"]);
-const emit = defineEmits(["update", "next", "back"]);
+defineProps<{ formData: any }>();
+const emit = defineEmits(['next', 'back']);
+const schema = deliverySchema;
 
-const localData = ref({ ...props.data });
-
-const handleNext = () => {
-  emit("update", localData.value);
-  emit("next");
-};
+const onSubmit = () => emit('next');
 </script>
 <template>
-  <Form @submit="handleNext" class="grid gap-y-6">
+  <Form :validation-schema="schema" @submit="onSubmit">
     <div>
-      <label for="firstName" class="form-label">First Name</label>
-      <Field
-        name="firstName"
-        v-model="localData.firstName"
-        id="firstName"
-        class="form-control"
-      />
+      <label>Name</label>
+      <Field name="name" v-model="formData.delivery.name" />
+      <ErrorMessage name="name" />
     </div>
     <div>
-      <label for="lastName" class="form-label">Last Name</label>
-      <Field
-        name="lastName"
-        v-model="localData.lastName"
-        id="lastName"
-        class="form-control"
-      />
+      <label>Address</label>
+      <Field name="address" v-model="formData.delivery.address" />
+      <ErrorMessage name="address" />
     </div>
-    <div class="flex justify-end gap-3">
-      <button
-        @click="$emit('back')"
-        class="border border-black-500 px-10 py-3 rounded-md uppercase font-bold"
-      >
-        Back
-      </button>
-      <button
-        type="submit"
-        class="btn-primary px-10 py-3 rounded-md uppercase font-bold"
-      >
-        Next
-      </button>
+    <div>
+      <label>Phone</label>
+      <Field name="phone" v-model="formData.delivery.phone" />
+      <ErrorMessage name="phone" />
     </div>
+    <button type="button" @click="$emit('back')">Back</button>
+    <button type="submit">Next</button>
   </Form>
 </template>

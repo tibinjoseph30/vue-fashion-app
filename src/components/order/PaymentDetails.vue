@@ -1,41 +1,36 @@
-<script setup lang="ts">
-import { Field, Form } from "vee-validate";
-import { ref } from "vue";
+[⚠️ Suspicious Content] <script setup lang="ts">
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { defineProps, defineEmits } from 'vue';
+import { paymentSchema } from '../../constants/validations/OrderFormValidation';
 
-const props = defineProps(["data"]);
-const emit = defineEmits(["update", "submit", "back"]);
+const props = defineProps<{ formData: any }>();
+const emit = defineEmits(['back', 'next']);
+const schema = paymentSchema;
 
-const localData = ref({ ...props.data });
+const onSubmit = () => {
+  alert('Form submitted successfully');
+  console.log(props.formData);
+  emit('next');
+};
 
-const handleSubmit = () => {
-  emit("update", localData.value);
-  emit("submit");
+const onFileChange = (e: Event) => {
+  const file = (e.target as HTMLInputElement).files?.[0] || null;
+  props.formData.payment.screenshot = file;
 };
 </script>
 <template>
-  <Form @submit="handleSubmit" class="grid gap-y-6">
+  <Form :validation-schema="schema" @submit="onSubmit">
     <div>
-      <label for="referenceID" class="form-label">Reference ID</label>
-      <Field
-        name="referenceID"
-        v-model="localData.referenceID"
-        id="referenceID"
-        class="form-control"
-      />
+      <label>UPI Reference ID</label>
+      <Field name="upiRef" v-model="formData.payment.upiRef" />
+      <ErrorMessage name="upiRef" />
     </div>
-    <div class="flex justify-end gap-3">
-      <button
-        @click="$emit('back')"
-        class="border border-black-500 px-10 py-3 rounded-md uppercase font-bold"
-      >
-        Back
-      </button>
-      <button
-        type="submit"
-        class="btn-primary px-10 py-3 rounded-md uppercase font-bold"
-      >
-        Place Order
-      </button>
+    <div>
+      <label>Payment Screenshot</label>
+      <input type="file" @change="onFileChange" />
+      <ErrorMessage name="screenshot" />
     </div>
+    <button type="button" @click="$emit('back')">Back</button>
+    <button type="submit">Submit</button>
   </Form>
 </template>
