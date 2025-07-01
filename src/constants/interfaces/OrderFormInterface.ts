@@ -1,21 +1,18 @@
 export interface OrderDetails {
-  productId: string;
-  quantity: number;
+  productCode: string;
+  productSize: string;
 }
 
 export interface DeliveryDetails {
-  name: string;
-  address: string;
+  firstName: string;
+  LastName: string;
   phone: string;
-}
-
-export interface PaymentDetails {
-  upiRef: string;
-  screenshot: File | null;
+  email: string;
+  address: string;
+  pinCode: string;
 }
 
 export interface OrderForm {
   order: OrderDetails;
   delivery: DeliveryDetails;
-  payment: PaymentDetails;
 }

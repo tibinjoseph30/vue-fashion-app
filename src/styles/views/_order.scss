@@ -1,12 +1,16 @@
 @use "../includes/variables" as *;
 
+:root {
+  --order-info-block-width: 400px;
+}
+
 .order-details {
   .order-form-block {
-    width: calc(100% - 400px);
+    width: calc(100% - var(--order-info-block-width));
     max-width: 100%;
   }
   .order-info-block {
-    width: 400px;
+    width: var(--order-info-block-width);
     figure {
       max-width: 60px;
     }

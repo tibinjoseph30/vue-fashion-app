@@ -1,12 +1,15 @@
+@use "../includes/variables" as *;
+
 header {
-    nav {
-        li {
-            list-style-type: none;
-            a {
-                font-weight: 600;
-                text-transform: uppercase;
-                font-size: 14px;
-            }
-        }
+  height: $header_height;
+  nav {
+    li {
+      list-style-type: none;
+      a {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 14px;
+      }
     }
+  }
 }

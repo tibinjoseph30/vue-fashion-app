@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -6,5 +6,12 @@
   --app-secondary-color: #6366f1;
   --app-bg-color: #f9fafb;
   --app-color: #212121;
-  --app-font: 'Inter', sans-serif;
+  --app-font: "Inter", sans-serif;
+  --app-placeholder: #999;
+  --app-border-color: #d5d5d5;
+  --app-header-height: 50px;
+  --app-form-element-height: 50px;
+  --app-form-element-radius: 6px;
+  --app-form-element-radius: 6px;
+  --app-dropdown-bg: #eeeeee;
 }

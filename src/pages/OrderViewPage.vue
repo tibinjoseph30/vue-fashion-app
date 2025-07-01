@@ -139,7 +139,7 @@ const product = allProducts.find((p) => p.productCode === newProductCode);
         <div class="order-form-block">
           <OrderForm :product="product" />
         </div>
-        <div class="order-info-block border-s border-gray-200 ps-8">
+        <div class="order-info-block ps-8">
           <OrderInfo :product="product" />
         </div>
       </div>

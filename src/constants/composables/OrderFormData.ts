@@ -1,20 +1,19 @@
 import { reactive } from "vue";
 import type { OrderForm } from "../interfaces/OrderFormInterface";
 
-export const useFormData = () => {
+export const useOrderFormData = () => {
   const formData = reactive<OrderForm>({
     order: {
-      productId: '',
-      quantity: 1,
+      productCode: "",
+      productSize: "",
     },
     delivery: {
-      name: '',
-      address: '',
-      phone: '',
-    },
-    payment: {
-      upiRef: '',
-      screenshot: null,
+      firstName: "",
+      LastName: "",
+      phone: "",
+      email: "",
+      address: "",
+      pinCode: "",
     },
   });
 

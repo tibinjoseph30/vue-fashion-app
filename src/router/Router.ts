@@ -3,6 +3,7 @@ import HomePage from "../pages/HomePage.vue";
 import ProductViewPage from "../pages/ProductViewPage.vue";
 import ProductDetailPage from "../pages/ProductDetailPage.vue";
 import OrderViewPage from "../pages/OrderViewPage.vue";
+import SignInPage from "../pages/SignInPage.vue";
 
 const routes = [
   {
@@ -26,6 +27,10 @@ const routes = [
   {
     path: "/order/:productCode",
     component: OrderViewPage,
+  },
+  {
+    path: "/admin",
+    component: SignInPage,
   },
 ];
 

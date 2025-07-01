@@ -3,7 +3,9 @@ import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <header class="border-b border-gray-200 py-3">
+  <header
+    class="fixed top-0 start-0 w-full grid items-center border-b border-gray-200 bg-white"
+  >
     <div class="container">
       <div class="flex">
         <a href="">logo</a>

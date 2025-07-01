@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useFormData } from '../../constants/composables/OrderFormData';
-import OrderDetails from './OrderDetails.vue';
-import DeliveryDetails from './DeliveryDetails.vue';
-import PaymentDetails from './PaymentDetails.vue';
+import { ref } from "vue";
+import OrderDetails from "./OrderDetails.vue";
+import DeliveryDetails from "./DeliveryDetails.vue";
+import { useOrderFormData } from "../../constants/composables/OrderFormData";
 
-const { formData } = useFormData();
+defineProps(["product"]);
+const { formData } = useOrderFormData();
 const currentStep = ref(0);
 
-const steps = [OrderDetails, DeliveryDetails, PaymentDetails];
+const steps = [OrderDetails, DeliveryDetails];
 
 const nextStep = () => {
   if (currentStep.value < steps.length - 1) currentStep.value++;
@@ -22,13 +22,21 @@ const prevStep = () => {
 <template>
   <div class="max-w-6/10 mx-auto">
     <div
-      class="flex justify-between max-w-md mx-auto text-center text-gray-500"
+      class="flex justify-center gap-16 max-w-md mx-auto text-center text-gray-500 mb-12"
     >
-      <div :class="currentStep >= 0 ? 'font-bold text-black' : ''">1. Order</div>
-      <div :class="currentStep >= 1 ? 'font-bold text-black' : ''">2. Contact</div>
-      <div :class="currentStep >= 3 ? 'font-bold text-black' : ''">3. Delivery</div>
+      <div :class="currentStep >= 0 ? 'font-bold text-black' : ''">
+        1. Order
+      </div>
+      <div :class="currentStep >= 1 ? 'font-bold text-black' : ''">
+        2. Delivery
+      </div>
     </div>
-    <component :is="steps[currentStep]" @next="nextStep" @back="prevStep" :formData="formData" />
-    
+    <component
+      :is="steps[currentStep]"
+      @next="nextStep"
+      @back="prevStep"
+      :formData="formData"
+      v-bind="currentStep === 0 ? { productCode: product?.productCode } : {}"
+    />
   </div>
 </template>
