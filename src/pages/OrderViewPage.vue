@@ -2,6 +2,7 @@
 import { useRoute } from "vue-router";
 import OrderForm from "../components/order/OrderForm.vue";
 import OrderInfo from "../components/order/OrderInfo.vue";
+import SectionLayout from "../components/shared/SectionLayout.vue";
 
 type Product = {
   productCode: string;
@@ -133,16 +134,14 @@ const product = allProducts.find((p) => p.productCode === newProductCode);
 </script>
 
 <template>
-  <section class="py-6">
-    <div class="container">
-      <div class="order-details flex">
-        <div class="order-form-block">
-          <OrderForm :product="product" />
-        </div>
-        <div class="order-info-block ps-8">
-          <OrderInfo :product="product" />
-        </div>
+  <SectionLayout>
+    <div class="order-details flex">
+      <div class="order-form-block">
+        <OrderForm :product="product" />
+      </div>
+      <div class="order-info-block ps-8">
+        <OrderInfo :product="product" />
       </div>
     </div>
-  </section>
+  </SectionLayout>
 </template>

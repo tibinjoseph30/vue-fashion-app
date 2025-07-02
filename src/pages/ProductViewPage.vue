@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProductCard from "../components/product/ProductCard.vue";
+import SectionLayout from "../components/shared/SectionLayout.vue";
 
 type Product = {
   productCode: string;
@@ -131,18 +132,16 @@ const collectionProducts = products[collectionId] || [];
 </script>
 
 <template>
-  <section class="py-6">
-    <div class="container">
-      <h2 class="text-center text-3xl font-bold uppercase mb-8">
-        New Arrivals {{ collectionId }}
-      </h2>
-      <div class="grid grid-cols-4 gap-6">
-        <ProductCard
-          v-for="product in collectionProducts"
-          :key="product.productCode"
-          :product="product"
-        />
-      </div>
+  <SectionLayout>
+    <h2 class="text-center text-3xl font-bold uppercase mb-8">
+      New Arrivals {{ collectionId }}
+    </h2>
+    <div class="grid grid-cols-4 gap-6">
+      <ProductCard
+        v-for="product in collectionProducts"
+        :key="product.productCode"
+        :product="product"
+      />
     </div>
-  </section>
+  </SectionLayout>
 </template>

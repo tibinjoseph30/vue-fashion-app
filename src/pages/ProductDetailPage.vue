@@ -2,6 +2,7 @@
 import { useRoute } from "vue-router";
 import ProductInfo from "../components/product/ProductInfo.vue";
 import ProductSlider from "../components/product/ProductSlider.vue";
+import SectionLayout from "../components/shared/SectionLayout.vue";
 
 type Product = {
   productCode: string;
@@ -136,19 +137,17 @@ const productImagesAsArray: string[] = product?.sliderImages
 </script>
 
 <template>
-  <section class="py-6">
-    <div class="container">
-      <div v-if="product" class="flex product-details">
-        <div class="product-slider-block">
-          <ProductSlider :slider="productImagesAsArray" />
-        </div>
-        <div class="product-info-block">
-          <ProductInfo :product="product" />
-        </div>
+  <SectionLayout>
+    <div v-if="product" class="flex product-details">
+      <div class="product-slider-block">
+        <ProductSlider :slider="productImagesAsArray" />
       </div>
-      <div v-else class="text-center text-red-500 text-lg py-10">
-        Product not found.
+      <div class="product-info-block">
+        <ProductInfo :product="product" />
       </div>
     </div>
-  </section>
+    <div v-else class="text-center text-red-500 text-lg py-10">
+      Product not found.
+    </div>
+  </SectionLayout>
 </template>
