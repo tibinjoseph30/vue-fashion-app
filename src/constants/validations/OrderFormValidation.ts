@@ -16,3 +16,7 @@ export const deliverySchema = yup.object({
   address: yup.string().required("Address is required"),
   pinCode: yup.string().required("Pincode is required"),
 });
+
+export const paymentSchema = yup.object({
+  transactionId: yup.string().required("Transaction ID is required"),
+});

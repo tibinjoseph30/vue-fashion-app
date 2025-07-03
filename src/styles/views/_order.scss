@@ -8,17 +8,12 @@
   .order-form-block {
     width: calc(100% - var(--order-info-block-width));
     max-width: 100%;
-  }
-  .order-info-block {
-    width: var(--order-info-block-width);
-    figure {
-      max-width: 60px;
+    .payment-method {
+      figure {
+        max-width: 180px;
+      }
     }
-    picture {
-      display: block;
-      max-width: 180px;
-    }
-    .qr-code-head {
+    .payment-seperation {
       position: relative;
       &::after,
       &::before {
@@ -38,6 +33,16 @@
       &::before {
         left: 0;
       }
+    }
+  }
+  .order-info-block {
+    width: var(--order-info-block-width);
+    figure {
+      max-width: 60px;
+    }
+    picture {
+      display: block;
+      max-width: 180px;
     }
   }
 }

@@ -15,6 +15,9 @@ export const useOrderFormData = () => {
       address: "",
       pinCode: "",
     },
+    payment: {
+      transactionId: "",
+    },
   });
 
   return { formData };

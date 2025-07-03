@@ -12,7 +12,12 @@ export interface DeliveryDetails {
   pinCode: string;
 }
 
+export interface PaymentDetails {
+  transactionId: string;
+}
+
 export interface OrderForm {
   order: OrderDetails;
   delivery: DeliveryDetails;
+  payment: PaymentDetails;
 }

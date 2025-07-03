@@ -4,14 +4,11 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import { defineProps, defineEmits } from "vue";
 import { deliverySchema } from "../../constants/validations/OrderFormValidation";
 
-const props = defineProps<{ formData: any }>();
-const emit = defineEmits(["back"]);
+defineProps<{ formData: any }>();
+const emit = defineEmits(["back", "next"]);
 const schema = deliverySchema;
 
-const onSubmit = () => {
-  alert("succesfully placed order");
-  console.log(props.formData);
-};
+const onSubmit = () => emit("next");
 </script>
 <template>
   <Form :validation-schema="schema" @submit="onSubmit" class="grid gap-y-6">
@@ -73,7 +70,7 @@ const onSubmit = () => {
       <button
         type="button"
         @click="$emit('back')"
-        class="border border-black-500 rounded-md px-6 py-3 uppercase font-bold"
+        class="border border-black-500 rounded-md px-6 py-3 uppercase font-bold grow-1"
       >
         Back
       </button>
@@ -81,7 +78,7 @@ const onSubmit = () => {
         type="submit"
         class="btn-primary px-6 py-3 rounded-md uppercase font-bold grow-1"
       >
-        Place Order
+        Next
       </button>
     </div>
   </Form>

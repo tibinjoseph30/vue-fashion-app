@@ -3,12 +3,13 @@ import { ref } from "vue";
 import OrderDetails from "./OrderDetails.vue";
 import DeliveryDetails from "./DeliveryDetails.vue";
 import { useOrderFormData } from "../../constants/composables/OrderFormData";
+import PaymentDetails from "./PaymentDetails.vue";
 
 defineProps(["product"]);
 const { formData } = useOrderFormData();
 const currentStep = ref(0);
 
-const steps = [OrderDetails, DeliveryDetails];
+const steps = [OrderDetails, DeliveryDetails, PaymentDetails];
 
 const nextStep = () => {
   if (currentStep.value < steps.length - 1) currentStep.value++;
@@ -29,6 +30,9 @@ const prevStep = () => {
       </div>
       <div :class="currentStep >= 1 ? 'font-bold text-black' : ''">
         2. Delivery
+      </div>
+      <div :class="currentStep >= 2 ? 'font-bold text-black' : ''">
+        3. Payments
       </div>
     </div>
     <component
