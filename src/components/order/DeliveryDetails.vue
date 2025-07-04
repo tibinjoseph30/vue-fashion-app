@@ -70,7 +70,7 @@ const onSubmit = () => emit("next");
       <button
         type="button"
         @click="$emit('back')"
-        class="border border-black-500 rounded-md px-6 py-3 uppercase font-bold grow-1"
+        class="border border-black-500 rounded-md px-6 py-3 uppercase font-bold"
       >
         Back
       </button>

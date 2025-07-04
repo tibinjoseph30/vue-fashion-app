@@ -14,7 +14,11 @@ const onSubmit = () => {
 </script>
 <template>
   <PaymentMethod />
-  <Form :validation-schema="schema" @submit="onSubmit" class="grid gap-y-6">
+  <Form
+    :validation-schema="schema"
+    @submit="onSubmit"
+    class="grid gap-y-6 mt-6"
+  >
     <div>
       <label class="form-label">Transaction ID</label>
       <Field
@@ -24,7 +28,7 @@ const onSubmit = () => {
       />
       <ErrorMessage name="transactionId" class="text-red-600 text-sm mt-1" />
     </div>
-    <div class="flex gap-3">
+    <div class="flex gap-6">
       <button
         type="button"
         @click="$emit('back')"
@@ -32,6 +36,18 @@ const onSubmit = () => {
       >
         Back
       </button>
+      <div>
+        <div class="text-slate-500">Total</div>
+        <div class="font-bold">&#8377; 399</div>
+      </div>
+      <button
+        type="button"
+        class="bg-black text-white px-8 py-3 rounded-md uppercase font-bold grow-1"
+      >
+        Confirm on Whatsapp
+      </button>
+    </div>
+    <div class="flex gap-3">
       <button
         type="submit"
         class="btn-primary px-8 py-3 rounded-md uppercase font-bold grow-1"

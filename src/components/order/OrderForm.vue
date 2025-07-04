@@ -23,16 +23,19 @@ const prevStep = () => {
 <template>
   <div class="max-w-6/10 mx-auto">
     <div
-      class="flex justify-center gap-16 max-w-md mx-auto text-center text-gray-500 mb-12"
+      class="stepper flex justify-center gap-16 max-w-md mx-auto text-center text-gray-500 mb-12"
     >
-      <div :class="currentStep >= 0 ? 'font-bold text-black' : ''">
-        1. Order
+      <div :class="currentStep >= 0 ? 'active' : ''" class="step">
+        <span class="stepper-count">1</span>
+        <span>Order</span>
       </div>
-      <div :class="currentStep >= 1 ? 'font-bold text-black' : ''">
-        2. Delivery
+      <div :class="currentStep >= 1 ? 'active' : ''" class="step">
+        <span class="stepper-count">2</span>
+        <span>Delivery</span>
       </div>
-      <div :class="currentStep >= 2 ? 'font-bold text-black' : ''">
-        3. Payments
+      <div :class="currentStep >= 2 ? 'active' : ''" class="step">
+        <span class="stepper-count">3</span>
+        <span>Payments</span>
       </div>
     </div>
     <component

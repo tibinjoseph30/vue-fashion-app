@@ -3,6 +3,7 @@ import { useRoute } from "vue-router";
 import OrderForm from "../components/order/OrderForm.vue";
 import OrderInfo from "../components/order/OrderInfo.vue";
 import SectionLayout from "../components/shared/SectionLayout.vue";
+import HowToOrder from "../components/order/HowToOrder.vue";
 
 type Product = {
   productCode: string;
@@ -143,5 +144,6 @@ const product = allProducts.find((p) => p.productCode === newProductCode);
         <OrderInfo :product="product" />
       </div>
     </div>
+    <HowToOrder />
   </SectionLayout>
 </template>
