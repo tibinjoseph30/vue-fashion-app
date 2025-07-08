@@ -1,20 +1,37 @@
 <script setup lang="ts">
-import qrCode from "@/assets/images/sample-qr.png";
 import gpay from "@/assets/images/icon-gpay.png";
 import phonepe from "@/assets/images/icon-phonepe.png";
 import amazonPay from "@/assets/images/icon-amazon-pay.png";
 import bhim from "@/assets/images/icon-bhim.png";
 import paytm from "@/assets/images/icon-paytm.png";
+import { computed } from "vue";
+
+const props = defineProps<{ product: any }>();
+
+const upiLink = computed(() => {
+  const upiId = "johndoe@upi";
+  const name = "My Fashion";
+  const amount = props.product.price;
+
+  return `upi://pay?pa=${upiId}&pn=${encodeURIComponent(
+    name
+  )}&am=${amount}&cu=INR`;
+});
 </script>
 
 <template>
-  <div class="text-center">
-    Scan and pay <span class="font-bold">&#8377; 399</span>
-  </div>
-  <figure class="max-w-[200px] mx-auto">
-    <img :src="qrCode" alt="qr" />
+  <div class="text-center">Scan and pay</div>
+  <figure class="max-w-[200px] mx-auto my-4">
+    <img
+      :src="`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+        upiLink
+      )}&size=200x200`"
+      alt="upi qr"
+    />
   </figure>
-  <div class="payment-seperation text-center my-2">OR pay via</div>
+  <div class="payment-seperation text-center text-sm text-gray-500 my-2">
+    OR pay via
+  </div>
   <div class="flex gap-3">
     <div class="text-center border border-gray-200 rounded-md p-3 grow-1">
       UPI ID: <b>john.doe@oksbi</b>

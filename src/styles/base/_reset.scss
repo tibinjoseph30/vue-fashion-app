@@ -6,7 +6,7 @@ body {
   color: $body_color;
 }
 
-button {
+button:not(:disabled) {
   cursor: pointer;
 }
 

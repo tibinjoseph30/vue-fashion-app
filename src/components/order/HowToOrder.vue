@@ -1,8 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>How to Order</div>
-  <ul class="text-sm">
+  <div class="text-xl font-semibold mb-2 mt-12">How to Order</div>
+  <ul class="text-sm list-decimal ms-[17px]">
     <li>
       Select your products and click the "order now" button. you can also order
       via Whatsapp on click "ask on whatsapp".
@@ -10,7 +10,7 @@
     <li>Provide delivery details carefully (size, address, phone, etc.).</li>
     <li>
       Make the payment using any one of the following:
-      <ul>
+      <ul class="text-sm list-disc ms-[17px]">
         <li>Scan the QR code shown on the screen</li>
         <li>Send to UPI ID: john.doe@oksbi</li>
         <li>Send to UPI-linked mobile number: 756985XXXX</li>

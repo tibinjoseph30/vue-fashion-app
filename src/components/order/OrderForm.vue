@@ -44,6 +44,7 @@ const prevStep = () => {
       @back="prevStep"
       :formData="formData"
       v-bind="currentStep === 0 ? { productCode: product?.productCode } : {}"
+      :product="product"
     />
   </div>
 </template>

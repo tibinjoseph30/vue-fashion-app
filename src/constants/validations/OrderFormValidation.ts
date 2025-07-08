@@ -18,5 +18,9 @@ export const deliverySchema = yup.object({
 });
 
 export const paymentSchema = yup.object({
-  transactionId: yup.string().required("Transaction ID is required"),
+  transactionId: yup
+    .string()
+    .required("Transaction ID is required")
+    .min(6, "Transaction ID seems too short")
+    .matches(/^[a-zA-Z0-9*]+$/, "Invalid Transaction ID format"),
 });

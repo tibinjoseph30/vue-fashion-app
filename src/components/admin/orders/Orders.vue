@@ -1,5 +1,29 @@
 <script setup lang="ts">
 import womenFashion from "@/assets/images/women-fashion.jpg";
+import { collection, getDocs } from "firebase/firestore";
+import { onMounted, ref } from "vue";
+import { db } from "../../../firebase/firebase.config";
+const orders = ref<any[]>([]);
+const isLoading = ref(true);
+
+const fetchOrders = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "orders"));
+    orders.value = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(orders.value);
+  } catch (error) {
+    console.log("error in data fetching:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchOrders();
+});
 </script>
 
 <template>
@@ -11,11 +35,12 @@ import womenFashion from "@/assets/images/women-fashion.jpg";
     <div>Address</div>
     <div>Contact</div>
     <div>Transaction ID</div>
-    <div>Status</div>
     <div>Date</div>
   </div>
   <div class="grid gap-3">
     <div
+      v-for="order in orders"
+      :key="order.id"
       class="grid items-center grid-cols-7 gap-3 shadow-lg/5 border border-gray-100 p-3 rounded-lg"
     >
       <div>
@@ -23,23 +48,18 @@ import womenFashion from "@/assets/images/women-fashion.jpg";
           <figure class="max-w-[50px]">
             <img :src="womenFashion" alt="" />
           </figure>
-          <div><b>MTSH01</b> / L</div>
+          <div>
+            <b>{{ order.order.productCode }}</b> / {{ order.order.productSize }}
+          </div>
         </div>
       </div>
-      <div>John Doe</div>
-      <div>123 Main Street, Anytown, CA 91234</div>
+      <div>{{ order.delivery.firstName }} {{ order.delivery.lastName }}</div>
+      <div>{{ order.delivery.address }}</div>
       <div>
-        <div>4565892148</div>
-        <div>johndoe@gmail.com</div>
+        <div>Mob: {{ order.delivery.phone }}</div>
+        <div>Email: {{ order.delivery.email }}</div>
       </div>
-      <div>1214789631654</div>
-      <div>
-        <span
-          class="border border-yellow-600 text-yellow-600 rounded-md py-2 px-3"
-        >
-          Pending
-        </span>
-      </div>
+      <div>{{ order.payment.transactionId }}</div>
       <div>30 Jun 2025</div>
     </div>
   </div>

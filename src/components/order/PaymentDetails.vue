@@ -2,18 +2,51 @@
 import { ErrorMessage, Field, Form } from "vee-validate";
 import { paymentSchema } from "../../constants/validations/OrderFormValidation";
 import PaymentMethod from "./PaymentMethod.vue";
-
-const props = defineProps<{ formData: any }>();
+import { onMounted, ref } from "vue";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../firebase/firebase.config";
+const props = defineProps<{ product: any; formData: any }>();
 const emit = defineEmits(["back"]);
 const schema = paymentSchema;
 
-const onSubmit = () => {
-  alert("succesfully placed order");
-  console.log(props.formData);
+const isConfirmOnWhatsapp = ref(false);
+const isvalidateTransaction = props.formData.payment.transactionId?.length >= 6;
+const isPlacingorder = ref(false);
+
+onMounted(() => {
+  isConfirmOnWhatsapp.value = isvalidateTransaction;
+});
+
+const handleTransactionChange = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  isConfirmOnWhatsapp.value = value.length >= 6;
+};
+
+const handleClick = () => {
+  alert("you clicked, confirm on whatsapp");
+};
+
+const onSubmit = async () => {
+  isPlacingorder.value = true;
+  try {
+    const orderData = {
+      ...props.formData,
+      createdAt: new Date().toISOString(),
+    };
+
+    await addDoc(collection(db, "orders"), orderData);
+    console.log("Saved to Firestore:", orderData);
+    alert("Order successfully placed!");
+  } catch (error) {
+    console.log("error in placing order:", error);
+    alert("Something went wrong while placing the order.");
+  } finally {
+    isPlacingorder.value = false;
+  }
 };
 </script>
 <template>
-  <PaymentMethod />
+  <PaymentMethod :product="product" />
   <Form
     :validation-schema="schema"
     @submit="onSubmit"
@@ -24,6 +57,7 @@ const onSubmit = () => {
       <Field
         name="transactionId"
         v-model="formData.payment.transactionId"
+        @input="handleTransactionChange"
         class="form-control"
       />
       <ErrorMessage name="transactionId" class="text-red-600 text-sm mt-1" />
@@ -38,11 +72,13 @@ const onSubmit = () => {
       </button>
       <div>
         <div class="text-slate-500">Total</div>
-        <div class="font-bold">&#8377; 399</div>
+        <div class="font-bold">&#8377; {{ props.product.price }}</div>
       </div>
       <button
+        @click="handleClick"
         type="button"
-        class="bg-black text-white px-8 py-3 rounded-md uppercase font-bold grow-1"
+        :disabled="!isConfirmOnWhatsapp"
+        class="bg-black text-white px-8 py-3 rounded-md uppercase font-bold grow-1 disabled:opacity-75"
       >
         Confirm on Whatsapp
       </button>
@@ -50,9 +86,10 @@ const onSubmit = () => {
     <div class="flex gap-3">
       <button
         type="submit"
-        class="btn-primary px-8 py-3 rounded-md uppercase font-bold grow-1"
+        class="btn-primary px-8 py-3 rounded-md uppercase font-bold grow-1 disabled:opacity-75"
+        :disabled="isPlacingorder"
       >
-        Place Order
+        {{ isPlacingorder ? "Placing Order" : "Place Order" }}
       </button>
     </div>
   </Form>
