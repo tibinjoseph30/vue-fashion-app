@@ -11,6 +11,8 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@vee-validate/yup": "^4.15.1",
+    "ag-grid-community": "^34.0.1",
+    "ag-grid-vue3": "^34.0.1",
     "firebase": "^11.10.0",
     "swiper": "^11.2.8",
     "vee-validate": "^4.15.1",

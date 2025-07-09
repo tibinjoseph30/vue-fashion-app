@@ -6,7 +6,7 @@ import OrderViewPage from "../pages/OrderViewPage.vue";
 import SignInPage from "../pages/SignInPage.vue";
 import DashboardPage from "../pages/admin/DashboardPage.vue";
 import OrderListPage from "../pages/admin/OrderListPage.vue";
-import { requireAdmin } from "../utils/authGuard";
+import { requireAdmin } from "../services/authGuard";
 
 const routes = [
   {
