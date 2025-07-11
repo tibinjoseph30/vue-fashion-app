@@ -1,12 +1,36 @@
 <script setup lang="ts">
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { auth } from "../../firebase/firebase.config";
 
 const isAdmin = ref(false);
 const showDropdown = ref(false);
 const router = useRouter();
+const dropdownRef = ref<HTMLElement | null>(null);
+
+const handleOutsideClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  if (
+    showDropdown.value &&
+    dropdownRef.value &&
+    !dropdownRef.value.contains(target)
+  ) {
+    showDropdown.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleOutsideClick);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleOutsideClick);
+});
+
+const closeDropdown = () => {
+  showDropdown.value = false;
+};
 
 onAuthStateChanged(auth, (user) => {
   isAdmin.value = !!user;
@@ -39,10 +63,11 @@ const handleLogout = async () => {
           <li>
             <RouterLink to="/women">Women</RouterLink>
           </li>
-          <li v-if="isAdmin" class="relative">
+          <li v-if="isAdmin" class="relative" ref="dropdownRef">
             <button @click="showDropdown = !showDropdown">Admin</button>
             <ul
               v-if="showDropdown"
+              @click.stop="closeDropdown"
               class="dropdown-menu absolute end-0 border border-gray-200 rounded-lg shadow-xl/5 p-2 bg-white"
             >
               <li>

@@ -43,6 +43,7 @@ const routes = [
   {
     path: "/admin/orders",
     component: OrderListPage,
+    beforeEnter: requireAdmin,
   },
 ];
 
