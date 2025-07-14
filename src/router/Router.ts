@@ -7,6 +7,8 @@ import SignInPage from "../pages/SignInPage.vue";
 import DashboardPage from "../pages/admin/DashboardPage.vue";
 import OrderListPage from "../pages/admin/OrderListPage.vue";
 import { requireAdmin } from "../services/authGuard";
+import ProductListPage from "../pages/admin/ProductListPage.vue";
+import ProductAddPage from "../pages/admin/ProductAddPage.vue";
 
 const routes = [
   {
@@ -43,6 +45,16 @@ const routes = [
   {
     path: "/admin/orders",
     component: OrderListPage,
+    beforeEnter: requireAdmin,
+  },
+  {
+    path: "/admin/products",
+    component: ProductListPage,
+    beforeEnter: requireAdmin,
+  },
+  {
+    path: "/admin/products/new-product",
+    component: ProductAddPage,
     beforeEnter: requireAdmin,
   },
 ];
