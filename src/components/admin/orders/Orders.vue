@@ -1,20 +1,12 @@
 <script setup lang="ts">
-import {
-  collection,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  updateDoc,
-} from "firebase/firestore";
 import { onMounted, ref, watch } from "vue";
-import { db } from "../../../firebase/firebase.config";
 import { formatDateTime } from "../../../constants/utils/formatDateTime";
 import { AgGridVue } from "ag-grid-vue3";
 import Vue3Select from "vue3-select";
 import "vue3-select/dist/vue3-select.css";
 
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import { supabase } from "../../../config/supabaseClient";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface OrderRow {
@@ -80,13 +72,20 @@ const confirmSelectedOrders = async () => {
 
   const updates = selectedNodes.map(async (node: any) => {
     const orderId = node.data.id;
-    const orderRef = doc(db, "orders", orderId);
 
     try {
-      await updateDoc(orderRef, { status: "confirmed" });
-      const index = allOrders.value.findIndex((o) => o.id === orderId);
-      if (index !== -1) {
-        allOrders.value[index].status = "confirmed";
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "confirmed" })
+        .eq("id", orderId);
+
+      if (error) {
+        console.error("Error updating order:", error);
+      } else {
+        const index = allOrders.value.findIndex((o) => o.id === orderId);
+        if (index !== -1) {
+          allOrders.value[index].status = "confirmed";
+        }
       }
     } catch (error) {
       console.log("error confirming order:", error);
@@ -110,13 +109,20 @@ const deliverdSelectedOrders = async () => {
 
   const updates = selectedNodes.map(async (node: any) => {
     const orderId = node.data.id;
-    const orderRef = doc(db, "orders", orderId);
 
     try {
-      await updateDoc(orderRef, { status: "delivered" });
-      const index = allOrders.value.findIndex((o) => o.id === orderId);
-      if (index !== -1) {
-        allOrders.value[index].status = "delivered";
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "delivered" })
+        .eq("id", orderId);
+
+      if (error) {
+        console.error("Error updating order:", error);
+      } else {
+        const index = allOrders.value.findIndex((o) => o.id === orderId);
+        if (index !== -1) {
+          allOrders.value[index].status = "delivered";
+        }
       }
     } catch (error) {
       console.log("error confirming order:", error);
@@ -140,13 +146,20 @@ const returnedSelectedOrders = async () => {
 
   const updates = selectedNodes.map(async (node: any) => {
     const orderId = node.data.id;
-    const orderRef = doc(db, "orders", orderId);
 
     try {
-      await updateDoc(orderRef, { status: "returned" });
-      const index = allOrders.value.findIndex((o) => o.id === orderId);
-      if (index !== -1) {
-        allOrders.value[index].status = "returned";
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "returned" })
+        .eq("id", orderId);
+
+      if (error) {
+        console.error("Error updating order:", error);
+      } else {
+        const index = allOrders.value.findIndex((o) => o.id === orderId);
+        if (index !== -1) {
+          allOrders.value[index].status = "returned";
+        }
       }
     } catch (error) {
       console.log("error confirming order:", error);
@@ -170,13 +183,20 @@ const refundedSelectedOrders = async () => {
 
   const updates = selectedNodes.map(async (node: any) => {
     const orderId = node.data.id;
-    const orderRef = doc(db, "orders", orderId);
 
     try {
-      await updateDoc(orderRef, { status: "refunded" });
-      const index = allOrders.value.findIndex((o) => o.id === orderId);
-      if (index !== -1) {
-        allOrders.value[index].status = "refunded";
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "refunded" })
+        .eq("id", orderId);
+
+      if (error) {
+        console.error("Error updating order:", error);
+      } else {
+        const index = allOrders.value.findIndex((o) => o.id === orderId);
+        if (index !== -1) {
+          allOrders.value[index].status = "refunded";
+        }
       }
     } catch (error) {
       console.log("error confirming order:", error);
@@ -195,6 +215,7 @@ const filterOrders = () => {
 
   if (selected === "all") {
     rowData.value = allOrders.value;
+    console.log("Final Row Data:", rowData.value);
     return;
   }
 
@@ -253,28 +274,38 @@ const defaultColDef = {
 
 const fetchOrders = async () => {
   try {
-    const ordersQuery = query(
-      collection(db, "orders"),
-      orderBy("createdAt", "desc")
-    );
-    const querySnapshot = await getDocs(ordersQuery);
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("createdAt", { ascending: false });
 
-    const data: OrderRow[] = querySnapshot.docs.map((doc) => {
-      const d = doc.data();
+    if (error) {
+      console.error("Error fetching orders:", error);
+      return;
+    }
+
+    console.log("Fetched data:", data);
+
+    const orders: OrderRow[] = (data || []).map((d: any) => {
+      const delivery = d.delivery || {};
+      const order = d.order || {};
+      const payment = d.payment || {};
 
       return {
-        id: doc.id,
-        customer: `${d.delivery?.firstName} ${d.delivery?.lastName}`,
-        product: `${d.order?.productCode} / ${d.order?.productSize}`,
-        address: `${d.delivery?.address}`,
-        contact: `${d.delivery?.phone}, ${d.delivery?.email}`,
-        transactionId: d.payment?.transactionId || "-",
+        id: d.id,
+        customer: `${delivery.firstName || ""} ${
+          delivery.lastName || ""
+        }`.trim(),
+        product: `${order.productCode || "-"} / ${order.productSize || "-"}`,
+        address: delivery.address || "-",
+        contact: `${delivery.phone || "-"}, ${delivery.email || "-"}`,
+        transactionId: payment.transactionId || "-",
         createdAt: formatDateTime(d.createdAt),
         status: d.status ? d.status.toLowerCase().trim() : "pending",
       };
     });
 
-    allOrders.value = data;
+    allOrders.value = orders;
     filterOrders();
   } catch (error) {
     console.log("error in data fetching:", error);

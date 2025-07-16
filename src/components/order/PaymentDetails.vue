@@ -3,8 +3,7 @@ import { ErrorMessage, Field, Form } from "vee-validate";
 import { paymentSchema } from "../../constants/validations/OrderFormValidation";
 import PaymentMethod from "./PaymentMethod.vue";
 import { onMounted, ref } from "vue";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase/firebase.config";
+import { supabase } from "../../config/supabaseClient";
 const props = defineProps<{ product: any; formData: any }>();
 const emit = defineEmits(["back"]);
 const schema = paymentSchema;
@@ -34,9 +33,15 @@ const onSubmit = async () => {
       createdAt: new Date().toISOString(),
     };
 
-    await addDoc(collection(db, "orders"), orderData);
-    console.log("Saved to Firestore:", orderData);
-    alert("Order successfully placed!");
+    const { data, error } = await supabase.from("orders").insert([orderData]);
+
+    if (error) {
+      console.error("Error inserting order:", error);
+      alert("Something went wrong while placing the order.");
+    } else {
+      console.log("Saved to Supabase:", data);
+      alert("Order successfully placed!");
+    }
   } catch (error) {
     console.log("error in placing order:", error);
     alert("Something went wrong while placing the order.");

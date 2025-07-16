@@ -1,12 +1,15 @@
-import { auth } from "../firebase/firebase.config";
+import { supabase } from "../config/supabaseClient";
 
-export const requireAdmin = (to: any, from: any, next: any) => {
-  const unsub = auth.onAuthStateChanged((user) => {
-    unsub(); // stop listening after first check
-    if (user && user.email === "admin@myfashion.com") {
-      next();
-    } else {
-      next("/admin");
-    }
-  });
+export const requireAdmin = async (to: any, from: any, next: any) => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const isAdmin = user?.user_metadata?.is_admin;
+
+  if (user && isAdmin) {
+    next();
+  } else {
+    next("/admin");
+  }
 };

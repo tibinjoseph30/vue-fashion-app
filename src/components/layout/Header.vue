@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
-import { auth } from "../../firebase/firebase.config";
+import { supabase } from "../../config/supabaseClient";
 
 const isAdmin = ref(false);
 const showDropdown = ref(false);
@@ -32,16 +31,20 @@ const closeDropdown = () => {
   showDropdown.value = false;
 };
 
-onAuthStateChanged(auth, (user) => {
+onMounted(async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   isAdmin.value = !!user;
 });
 
 const handleLogout = async () => {
-  try {
-    await signOut(auth);
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.log("Logout error:", error.message);
+  } else {
     router.push("/admin");
-  } catch (error) {
-    console.log("logout error:", error);
   }
 };
 </script>
@@ -51,9 +54,9 @@ const handleLogout = async () => {
     class="fixed top-0 start-0 w-full grid items-center border-b border-gray-200 bg-white"
   >
     <div class="container">
-      <div class="flex">
+      <div class="flex items-center">
         <a href="">logo</a>
-        <nav class="ms-auto flex gap-6">
+        <nav class="ms-auto flex items-center gap-6">
           <li>
             <RouterLink to="/">Sale</RouterLink>
           </li>

@@ -2,29 +2,27 @@
 import { ErrorMessage, Field, Form } from "vee-validate";
 import { loginSchema } from "../../constants/validations/AuthFormValidation";
 import { useAuthFormData } from "../../constants/composables/AuthFormData";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase/firebase.config";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { getLoginErrorMessages } from "../../constants/errors/LoginErrors";
+import { useAuthStore } from "../../stores/authStore";
 
 const { formData } = useAuthFormData();
 const router = useRouter();
 const loginError = ref("");
 
+const authStore = useAuthStore();
+
 const onSubmit = async (values: any) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    );
-    console.log("logged in user:", userCredential.user);
+    const isAdmin = await authStore.login(values.email, values.password);
 
-    router.push("/admin/dashboard");
-  } catch (error: any) {
-    loginError.value = getLoginErrorMessages(error.code);
-    console.log("login error:", error);
+    if (isAdmin) {
+      router.push("/admin/dashboard");
+    } else {
+      await authStore.logout();
+    }
+  } catch (error) {
+    console.log("unexpected error:", error);
   }
 };
 </script>
