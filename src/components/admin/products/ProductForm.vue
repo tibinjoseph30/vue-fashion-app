@@ -123,13 +123,13 @@ const onSubmit = async () => {
     productData.category = categoryField.value;
     productData.sub_category = subCategoryField.value;
     productData.product_code = productCode.value;
+    productData.images = sliderUrls;
+    productData.thumbnail = thumbnailUrl;
 
     const { error } = await supabase.from("products").insert([
       {
         ...productData,
         user_id: user.id,
-        images: sliderUrls,
-        thumbnail: thumbnailUrl,
         created_at: new Date().toISOString(),
       },
     ]);
