@@ -1,24 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, type Ref } from "vue";
 import { formatDateTime } from "../../../constants/utils/formatDateTime";
 import { AgGridVue } from "ag-grid-vue3";
 import Vue3Select from "vue3-select";
 import "vue3-select/dist/vue3-select.css";
 
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
-import { supabase } from "../../../config/supabaseClient";
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-interface OrderRow {
-  id: string;
-  customer: string;
-  product: string;
-  address: string;
-  contact: string;
-  transactionId: string;
-  createdAt: string;
-  status?: string;
-}
+import { supabase } from "../../../config/supabaseClient";
+import type { OrderRow } from "../../../constants/interfaces/OrderListInterface";
 
 const rowData = ref<OrderRow[]>([]);
 const allOrders = ref<OrderRow[]>([]);
@@ -62,11 +52,15 @@ const onSelectionChanged = () => {
   );
 };
 
-const confirmSelectedOrders = async () => {
-  isConfirming.value = true;
+const updateSelectedOrders = async (
+  newStatus: string,
+  loadingFlag: Ref<boolean>
+) => {
+  loadingFlag.value = true;
   const selectedNodes = gridApi.value?.getSelectedNodes();
-  if (!selectedNodes || selectedNodes.length === 0) {
+  if (!selectedNodes?.length) {
     alert("No rows selected");
+    loadingFlag.value = false;
     return;
   }
 
@@ -76,137 +70,25 @@ const confirmSelectedOrders = async () => {
     try {
       const { error } = await supabase
         .from("orders")
-        .update({ status: "confirmed" })
+        .update({ status: newStatus })
         .eq("id", orderId);
 
-      if (error) {
-        console.error("Error updating order:", error);
-      } else {
+      if (!error) {
         const index = allOrders.value.findIndex((o) => o.id === orderId);
         if (index !== -1) {
-          allOrders.value[index].status = "confirmed";
+          allOrders.value[index].status = newStatus;
         }
+      } else {
+        console.error("Update error:", error);
       }
     } catch (error) {
       console.log("error confirming order:", error);
-    } finally {
-      isConfirming.value = false;
     }
   });
 
   await Promise.all(updates);
-  alert("Selected orders confirmed.");
-  filterOrders();
-};
-
-const deliverdSelectedOrders = async () => {
-  isDelivered.value = true;
-  const selectedNodes = gridApi.value?.getSelectedNodes();
-  if (!selectedNodes || selectedNodes.length === 0) {
-    alert("No rows selected");
-    return;
-  }
-
-  const updates = selectedNodes.map(async (node: any) => {
-    const orderId = node.data.id;
-
-    try {
-      const { error } = await supabase
-        .from("orders")
-        .update({ status: "delivered" })
-        .eq("id", orderId);
-
-      if (error) {
-        console.error("Error updating order:", error);
-      } else {
-        const index = allOrders.value.findIndex((o) => o.id === orderId);
-        if (index !== -1) {
-          allOrders.value[index].status = "delivered";
-        }
-      }
-    } catch (error) {
-      console.log("error confirming order:", error);
-    } finally {
-      isDelivered.value = false;
-    }
-  });
-
-  await Promise.all(updates);
-  alert("Selected orders confirmed.");
-  filterOrders();
-};
-
-const returnedSelectedOrders = async () => {
-  isReturned.value = true;
-  const selectedNodes = gridApi.value?.getSelectedNodes();
-  if (!selectedNodes || selectedNodes.length === 0) {
-    alert("No rows selected");
-    return;
-  }
-
-  const updates = selectedNodes.map(async (node: any) => {
-    const orderId = node.data.id;
-
-    try {
-      const { error } = await supabase
-        .from("orders")
-        .update({ status: "returned" })
-        .eq("id", orderId);
-
-      if (error) {
-        console.error("Error updating order:", error);
-      } else {
-        const index = allOrders.value.findIndex((o) => o.id === orderId);
-        if (index !== -1) {
-          allOrders.value[index].status = "returned";
-        }
-      }
-    } catch (error) {
-      console.log("error confirming order:", error);
-    } finally {
-      isDelivered.value = false;
-    }
-  });
-
-  await Promise.all(updates);
-  alert("Selected orders confirmed.");
-  filterOrders();
-};
-
-const refundedSelectedOrders = async () => {
-  isRefunded.value = true;
-  const selectedNodes = gridApi.value?.getSelectedNodes();
-  if (!selectedNodes || selectedNodes.length === 0) {
-    alert("No rows selected");
-    return;
-  }
-
-  const updates = selectedNodes.map(async (node: any) => {
-    const orderId = node.data.id;
-
-    try {
-      const { error } = await supabase
-        .from("orders")
-        .update({ status: "refunded" })
-        .eq("id", orderId);
-
-      if (error) {
-        console.error("Error updating order:", error);
-      } else {
-        const index = allOrders.value.findIndex((o) => o.id === orderId);
-        if (index !== -1) {
-          allOrders.value[index].status = "refunded";
-        }
-      }
-    } catch (error) {
-      console.log("error confirming order:", error);
-    } finally {
-      isDelivered.value = false;
-    }
-  });
-
-  await Promise.all(updates);
-  alert("Selected orders confirmed.");
+  loadingFlag.value = false;
+  alert(`Selected orders marked as ${newStatus}.`);
   filterOrders();
 };
 
@@ -231,6 +113,37 @@ const filterOrders = () => {
 watch(selectedStatus, () => {
   filterOrders();
 });
+
+const statusActions = [
+  {
+    label: "Confirm Order",
+    nextStatus: "confirmed",
+    show: showConfirmBtn,
+    loading: isConfirming,
+    color: "green-600",
+  },
+  {
+    label: "Mark as Delivered",
+    nextStatus: "delivered",
+    show: showDeliverBtn,
+    loading: isDelivered,
+    color: "blue-500",
+  },
+  {
+    label: "Mark as Returned",
+    nextStatus: "returned",
+    show: showReturnBtn,
+    loading: isReturned,
+    color: "amber-500",
+  },
+  {
+    label: "Mark as Refunded",
+    nextStatus: "refunded",
+    show: showRefundBtn,
+    loading: isRefunded,
+    color: "red-600",
+  },
+];
 
 const columnDefs = [
   {
@@ -335,38 +248,20 @@ onMounted(async () => {
         :searchable="false"
         :clearable="false"
       />
-      <button
-        v-if="showConfirmBtn"
-        class="bg-green-600 text-white px-4 uppercase py-2 rounded-md font-semibold disabled:opacity-75"
-        @click="confirmSelectedOrders"
-        :disabled="isConfirming"
-      >
-        {{ isConfirming ? "Confirming Order..." : "Confirm Order" }}
-      </button>
-      <button
-        v-if="showDeliverBtn"
-        class="bg-blue-500 text-white px-4 uppercase py-2 rounded-md font-semibold disabled:opacity-75"
-        @click="deliverdSelectedOrders"
-        :disabled="isDelivered"
-      >
-        {{ isDelivered ? "Marking as Delivered..." : "Mark as Delivered" }}
-      </button>
-      <button
-        v-if="showReturnBtn"
-        class="bg-amber-500 text-white px-4 uppercase py-2 rounded-md font-semibold disabled:opacity-75"
-        @click="returnedSelectedOrders"
-        :disabled="isReturned"
-      >
-        {{ isReturned ? "Marking as Returned..." : "Mark as Returned" }}
-      </button>
-      <button
-        v-if="showRefundBtn"
-        class="bg-red-600 text-white px-4 uppercase py-2 rounded-md font-semibold disabled:opacity-75"
-        @click="refundedSelectedOrders"
-        :disabled="isRefunded"
-      >
-        {{ isRefunded ? "Marking as Refunded..." : "Mark as Refunded" }}
-      </button>
+      <template v-for="(action, index) in statusActions" :key="index">
+        <button
+          v-if="action.show.value"
+          class="px-4 py-2 rounded-md font-semibold text-white uppercase"
+          :class="[
+            `bg-${action.color}`,
+            { 'opacity-75': action.loading.value },
+          ]"
+          @click="() => updateSelectedOrders(action.nextStatus, action.loading)"
+          :disabled="action.loading.value"
+        >
+          {{ action.label }}
+        </button>
+      </template>
     </div>
     <div class="ag-grid">
       <AgGridVue
