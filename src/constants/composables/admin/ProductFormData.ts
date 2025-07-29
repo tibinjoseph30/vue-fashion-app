@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import type { ProductForm } from "../../interfaces/admin/ProductFormInterface";
+import type { ProductForm } from "../../interfaces/ProductFormInterface";
 
 export const useProductFormData = () => {
   const productData = reactive<ProductForm>({

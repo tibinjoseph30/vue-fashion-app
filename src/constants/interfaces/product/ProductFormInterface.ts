@@ -10,3 +10,12 @@ export interface ProductForm {
   images: string[];
   thumbnail: string;
 }
+
+export interface ProductRow {
+  thumbnail: string;
+  productCode: string;
+  productName: string;
+  price: string;
+  quantity: string;
+  sizes: string[];
+}

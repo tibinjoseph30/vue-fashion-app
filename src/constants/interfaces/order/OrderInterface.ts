@@ -1,9 +1,9 @@
-export interface OrderDetails {
+interface OrderDetails {
   productCode: string;
   productSize: string;
 }
 
-export interface DeliveryDetails {
+interface DeliveryDetails {
   firstName: string;
   LastName: string;
   phone: string;
@@ -12,7 +12,7 @@ export interface DeliveryDetails {
   pinCode: string;
 }
 
-export interface PaymentDetails {
+interface PaymentDetails {
   transactionId: string;
 }
 
@@ -20,4 +20,15 @@ export interface OrderForm {
   order: OrderDetails;
   delivery: DeliveryDetails;
   payment: PaymentDetails;
+}
+
+export interface OrderRow {
+  id: string;
+  customer: string;
+  product: string;
+  address: string;
+  contact: string;
+  transactionId: string;
+  createdAt: string;
+  status?: string;
 }

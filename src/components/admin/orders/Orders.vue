@@ -8,7 +8,7 @@ import "vue3-select/dist/vue3-select.css";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { supabase } from "../../../config/supabaseClient";
-import type { OrderRow } from "../../../constants/interfaces/OrderListInterface";
+import type { OrderRow } from "../../../constants/interfaces/order/OrderInterface";
 
 const rowData = ref<OrderRow[]>([]);
 const allOrders = ref<OrderRow[]>([]);
