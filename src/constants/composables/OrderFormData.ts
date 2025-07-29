@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import type { OrderForm } from "../interfaces/OrderFormInterface";
+import type { OrderForm } from "../interfaces/order/OrderInterface";
 
 export const useOrderFormData = () => {
   const formData = reactive<OrderForm>({
